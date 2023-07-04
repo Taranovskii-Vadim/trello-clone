@@ -2,7 +2,7 @@ import Image from "next/image";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 const Header = (): JSX.Element => (
-  <header className="px-6 md:px-4 py-4 md:py-2 flex flex-col md:flex-row items-center p-5 bg-gray-500/10">
+  <header className="px-6 md:px-4 py-4 md:py-2 flex flex-col md:flex-row items-center p-5">
     <Image
       width={200}
       height={200}
