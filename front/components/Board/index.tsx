@@ -7,7 +7,7 @@ import { useStore } from "@/store/board";
 import Column from "../Column";
 
 const Board = (): JSX.Element => {
-  const { data, fetchData, setState } = useStore();
+  const { state, fetchData, setState } = useStore();
 
   useEffect(() => {
     fetchData();
@@ -17,15 +17,15 @@ const Board = (): JSX.Element => {
     if (!destination) return;
 
     if (type === "column") {
-      const entries = Array.from(data.columns.entries());
+      const entries = Array.from(state.entries());
       const [removed] = entries.splice(source.index, 1);
       entries.splice(destination.index, 0, removed);
       const columns = new Map(entries);
-      setState({ columns });
+      setState(columns);
     }
 
     if (type === "card") {
-      const copy = Array.from(data.columns);
+      const copy = Array.from(state);
       const startIndex = copy[Number(source.droppableId)];
       const finishIndex = copy[Number(destination.droppableId)];
 
@@ -40,20 +40,20 @@ const Board = (): JSX.Element => {
 
         const newCol = { id: startCol.id, notes: newNotes };
 
-        const columns = new Map(data.columns);
+        const columns = new Map(state);
         columns.set(startCol.id, newCol);
-        setState({ columns });
+        setState(columns);
       } else {
         const finishNotes = Array.from(finishCol.notes);
         finishNotes.splice(destination.index, 0, moved);
 
         const newCol = { id: startCol.id, notes: newNotes };
-        const columns = new Map(data.columns);
+        const columns = new Map(state);
 
         columns.set(startCol.id, newCol);
         columns.set(finishCol.id, { id: finishCol.id, notes: finishNotes });
 
-        setState({ columns });
+        setState(columns);
       }
     }
   };
@@ -62,14 +62,14 @@ const Board = (): JSX.Element => {
     <main>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="board" direction="horizontal" type="column">
-          {(provided) => (
+          {({ innerRef, droppableProps }) => (
             <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
+              {...droppableProps}
+              ref={innerRef}
               className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-7xl mx-auto"
             >
-              {Array.from(data.columns.entries()).map(([id, column], index) => (
-                <Column key={id} id={id} data={column.notes} index={index} />
+              {Array.from(state.entries()).map(([id, column], index) => (
+                <Column key={id} id={id} index={index} data={column.notes} />
               ))}
             </div>
           )}

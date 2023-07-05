@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { Column, State, Status } from "./types";
 
 export const useStore = create<State>((set) => ({
-  data: { columns: new Map<Status, Column>() },
+  state: new Map<Status, Column>(),
   fetchData: async () => {
     const columns = new Map<Status, Column>();
 
@@ -41,9 +41,9 @@ export const useStore = create<State>((set) => ({
       ],
     });
 
-    set({ data: { columns } });
+    set({ state: columns });
   },
-  setState(data) {
-    set({ data });
+  setState(state) {
+    set({ state });
   },
 }));
