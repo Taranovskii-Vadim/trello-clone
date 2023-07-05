@@ -14,4 +14,5 @@ export type Column = { id: Status; notes: Note[] };
 export type State = {
   data: { columns: Map<Status, Column> };
   fetchData: () => Promise<void>;
+  setState: (data: { columns: Map<Status, Column> }) => void;
 };

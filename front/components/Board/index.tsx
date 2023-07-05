@@ -7,13 +7,56 @@ import { useStore } from "@/store/board";
 import Column from "../Column";
 
 const Board = (): JSX.Element => {
-  const { data, fetchData } = useStore();
+  const { data, fetchData, setState } = useStore();
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  const handleDragEnd = (result: DropResult): void => {};
+  const handleDragEnd = ({ destination, source, type }: DropResult): void => {
+    if (!destination) return;
+
+    if (type === "column") {
+      const entries = Array.from(data.columns.entries());
+      const [removed] = entries.splice(source.index, 1);
+      entries.splice(destination.index, 0, removed);
+      const columns = new Map(entries);
+      setState({ columns });
+    }
+
+    if (type === "card") {
+      const copy = Array.from(data.columns);
+      const startIndex = copy[Number(source.droppableId)];
+      const finishIndex = copy[Number(destination.droppableId)];
+
+      const startCol = { id: startIndex[0], notes: startIndex[1].notes };
+      const finishCol = { id: finishIndex[0], notes: finishIndex[1].notes };
+
+      const newNotes = startCol.notes;
+      const [moved] = newNotes.splice(source.index, 1);
+
+      if (startCol.id === finishCol.id) {
+        newNotes.splice(destination.index, 0, moved);
+
+        const newCol = { id: startCol.id, notes: newNotes };
+
+        const columns = new Map(data.columns);
+        columns.set(startCol.id, newCol);
+        setState({ columns });
+      } else {
+        const finishNotes = Array.from(finishCol.notes);
+        finishNotes.splice(destination.index, 0, moved);
+
+        const newCol = { id: startCol.id, notes: newNotes };
+        const columns = new Map(data.columns);
+
+        columns.set(startCol.id, newCol);
+        columns.set(finishCol.id, { id: finishCol.id, notes: finishNotes });
+
+        setState({ columns });
+      }
+    }
+  };
 
   return (
     <main>
