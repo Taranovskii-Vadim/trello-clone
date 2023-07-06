@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+import Modal from "@/components/Modal";
+
 import "./globals.css";
 
 interface Props {
@@ -12,7 +14,10 @@ export const metadata = {
 
 const RootLayout = ({ children }: Props): JSX.Element => (
   <html lang="ru">
-    <body>{children}</body>
+    <body>
+      {children}
+      <Modal />
+    </body>
   </html>
 );
 
