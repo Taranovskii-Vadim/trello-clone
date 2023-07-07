@@ -2,9 +2,8 @@ import Board from "@/components/Board";
 import Header from "@/components/Header";
 
 // action items
-// 2) add all client logic (search, fetch, add, add image)
-// 3) add backend logic
-// 4) integrate with api logic
+// 2) add backend logic
+// 3) add all client logic (search, fetch, add, add image)
 // 5) components refactor
 
 const Home = (): JSX.Element => (

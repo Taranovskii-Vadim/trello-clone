@@ -1,34 +1,30 @@
-import { create } from "zustand";
+import { create } from 'zustand';
+import axios from 'axios';
 
-import { Board, State } from "./types";
+import { Board, State } from './types';
+
+interface ResponseDTO {
+  notes: {
+    id: number;
+    title: string;
+    image: string | null;
+    status: 'todo' | 'inprogress' | 'done';
+  }[];
+}
 
 export const useStore = create<State>((set, get) => ({
   state: { todo: [], inprogress: [], done: [] },
   fetchData: async () => {
-    const state: Board = {
-      todo: [
-        { id: 1, title: "first todo", createdAt: "today", status: "todo" },
-        { id: 6, title: "second todo", createdAt: "today", status: "done" },
-      ],
-      inprogress: [
-        {
-          id: 2,
-          title: "first inprogress",
-          createdAt: "today",
-          status: "inprogress",
-        },
-        {
-          id: 5,
-          title: "second inprogress",
-          createdAt: "today",
-          status: "done",
-        },
-      ],
-      done: [
-        { id: 3, title: "first done", createdAt: "today", status: "done" },
-        { id: 4, title: "second done", createdAt: "today", status: "done" },
-      ],
-    };
+    const { data } = await axios.get<ResponseDTO>('http://localhost:3001/api/notes');
+
+    const state = data.notes.reduce(
+      (acc: Board, item) => {
+        acc[item.status] = [...acc[item.status], item];
+
+        return acc;
+      },
+      { todo: [], inprogress: [], done: [] } as Board,
+    );
 
     set({ state });
   },
@@ -38,13 +34,13 @@ export const useStore = create<State>((set, get) => ({
     const { state } = get();
     const entries = Object.entries(state);
 
-    if (type === "column") {
+    if (type === 'column') {
       const [removed] = entries.splice(source.index, 1);
       entries.splice(destination.index, 0, removed);
       set({ state: Object.fromEntries(entries) as Board });
     }
 
-    if (type === "card") {
+    if (type === 'card') {
       const start = entries[Number(source.droppableId)];
       const finish = entries[Number(destination.droppableId)];
 
