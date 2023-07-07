@@ -1,3 +1,5 @@
+import { DropResult } from "react-beautiful-dnd";
+
 export type Status = "todo" | "inprogress" | "done";
 
 export type Note = {
@@ -8,11 +10,10 @@ export type Note = {
   createdAt: string;
 };
 
-// TODO maybe refactor types later and stucture
-export type Column = { id: Status; notes: Note[] };
+export type Board = Record<Status, Note[]>;
 
 export type State = {
-  state: Map<Status, Column>;
+  state: Board;
   fetchData: () => Promise<void>;
-  setState: (value: Map<Status, Column>) => void;
+  dragAndDropData: (value: DropResult) => void;
 };
