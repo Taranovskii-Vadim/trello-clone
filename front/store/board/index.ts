@@ -1,23 +1,18 @@
-import { create } from 'zustand';
 import axios from 'axios';
+import { create } from 'zustand';
 
-import { Board, State } from './types';
+import { Board, State, FetchResponseDTO } from './types';
 
-interface ResponseDTO {
-  notes: {
-    id: number;
-    title: string;
-    image: string | null;
-    status: 'todo' | 'inprogress' | 'done';
-  }[];
-}
+const axiosInstance = axios.create({ baseURL: 'http://localhost:3001/api' });
+
+let HASH: Board;
 
 export const useStore = create<State>((set, get) => ({
   state: { todo: [], inprogress: [], done: [] },
   fetchData: async () => {
-    const { data } = await axios.get<ResponseDTO>('http://localhost:3001/api/notes');
+    const { data } = await axiosInstance.get<FetchResponseDTO>('/notes');
 
-    const state = data.notes.reduce(
+    HASH = data.notes.reduce(
       (acc: Board, item) => {
         acc[item.status] = [...acc[item.status], item];
 
@@ -26,7 +21,17 @@ export const useStore = create<State>((set, get) => ({
       { todo: [], inprogress: [], done: [] } as Board,
     );
 
-    set({ state });
+    set({ state: HASH });
+  },
+  searchData: (value) => {
+    if (HASH) {
+      const filtered = Object.entries(HASH).map((item) => [
+        item[0],
+        item[1].filter((note) => note.title.toLowerCase().startsWith(value.toLowerCase())),
+      ]);
+
+      set({ state: Object.fromEntries(filtered) });
+    }
   },
   dragAndDropData: ({ destination, source, type }) => {
     if (!destination) return;

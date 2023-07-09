@@ -1,9 +1,9 @@
-import Board from "@/components/Board";
-import Header from "@/components/Header";
+import Board from '@/components/Board';
+import Header from '@/components/Header';
 
 // action items
 // 2) add backend logic
-// 3) add all client logic (search, fetch, add, add image)
+// 3) add all client logic ( add, add image, show loading state)
 // 5) components refactor
 
 const Home = (): JSX.Element => (
