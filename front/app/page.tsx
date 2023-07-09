@@ -2,8 +2,8 @@ import Board from '@/components/Board';
 import Header from '@/components/Header';
 
 // action items
-// 2) add backend logic
-// 3) add all client logic (add, add image, show loading state)
+// 3) add all client logic (add image, show loading state)
+// 4) add auth logic
 // 5) components refactor
 
 const Home = (): JSX.Element => (

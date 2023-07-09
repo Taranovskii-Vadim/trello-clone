@@ -16,6 +16,22 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+router.post('/', async (req: Request<any, any, Pick<Note, 'title' | 'status'>>, res: Response) => {
+  try {
+    const title = req.body.title;
+    const status = req.body.status;
+
+    const { rows } = await database.query<Note>(
+      'INSERT INTO note(title, status, user_id) VALUES ($1, $2, $3) RETURNING id',
+      [title, status, 1],
+    );
+
+    res.json({ note: { id: rows[0].id, title, status } });
+  } catch (e) {
+    console.error(e);
+  }
+});
+
 router.patch('/', async (req: Request<any, any, { status: Note['status'] }, { id: string }>, res: Response) => {
   try {
     await database.query('UPDATE note SET status=$1 WHERE id=$2', [req.body.status, req.query.id]);

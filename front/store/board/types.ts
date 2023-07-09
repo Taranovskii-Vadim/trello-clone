@@ -17,6 +17,7 @@ export type State = {
   searchNote: (value: string) => void;
   dragAndDropData: (value: DropResult) => Promise<void>;
   deleteNote: (id: number, status: Status) => Promise<void>;
+  addNote: (config: Pick<Note, 'title' | 'status'>) => Promise<void>;
 };
 
 export type FetchResponseDTO = {
@@ -27,6 +28,8 @@ export type FetchResponseDTO = {
     status: 'todo' | 'inprogress' | 'done';
   }[];
 };
+
+export type PostResponseDTO = { note: Omit<Note, 'image'> };
 
 export type PatchResponseDTO = {
   status: Note['status'];

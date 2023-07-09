@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { create } from 'zustand';
 
-import { Board, State, FetchResponseDTO, PatchResponseDTO } from './types';
+import { Board, State, FetchResponseDTO, PatchResponseDTO, PostResponseDTO } from './types';
 
 const axiosInstance = axios.create({ baseURL: 'http://localhost:3001/api' });
 
@@ -21,6 +21,17 @@ export const useStore = create<State>((set, get) => ({
         },
         { todo: [], inprogress: [], done: [] } as Board,
       );
+
+      set({ state: HASH });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  addNote: async (config) => {
+    try {
+      const { data } = await axiosInstance.post<PostResponseDTO>('/notes', config);
+
+      HASH[config.status].push({ ...data.note, image: null });
 
       set({ state: HASH });
     } catch (e) {
