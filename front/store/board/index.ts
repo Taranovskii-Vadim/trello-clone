@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { create } from 'zustand';
 
-import { Board, State, FetchResponseDTO } from './types';
+import { Board, State, FetchResponseDTO, PatchResponseDTO } from './types';
 
 const axiosInstance = axios.create({ baseURL: 'http://localhost:3001/api' });
 
@@ -48,7 +48,7 @@ export const useStore = create<State>((set, get) => ({
       set({ state: Object.fromEntries(filtered) });
     }
   },
-  dragAndDropData: ({ destination, source, type }) => {
+  dragAndDropData: async ({ destination, source, type }) => {
     if (!destination) return;
 
     const { state } = get();
@@ -72,7 +72,9 @@ export const useStore = create<State>((set, get) => ({
         startNotes.splice(destination.index, 0, moved);
         set({ state: { ...state, [start[0]]: startNotes } });
       } else {
-        finishNotes.splice(destination.index, 0, moved);
+        const { data } = await axiosInstance.patch<PatchResponseDTO>(`/notes?id=${moved.id}`, { status: finish[0] });
+
+        finishNotes.splice(destination.index, 0, { ...moved, status: data.status });
 
         set({
           state: { ...state, [start[0]]: startNotes, [finish[0]]: finishNotes },

@@ -15,7 +15,7 @@ export type State = {
   state: Board;
   fetchNotes: () => Promise<void>;
   searchNote: (value: string) => void;
-  dragAndDropData: (value: DropResult) => void;
+  dragAndDropData: (value: DropResult) => Promise<void>;
   deleteNote: (id: number, status: Status) => Promise<void>;
 };
 
@@ -26,4 +26,8 @@ export type FetchResponseDTO = {
     image: string | null;
     status: 'todo' | 'inprogress' | 'done';
   }[];
+};
+
+export type PatchResponseDTO = {
+  status: Note['status'];
 };
