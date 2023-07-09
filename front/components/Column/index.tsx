@@ -32,7 +32,7 @@ const Column = ({ id, index, data }: Props): JSX.Element => {
                   <div className="space-y-2">
                     {data.map((item, index) => (
                       <Draggable key={item.id} index={index} draggableId={item.id.toString()}>
-                        {(provided) => <Card id={id} data={item} index={index} {...provided} />}
+                        {(provided) => <Card data={item} {...provided} />}
                       </Draggable>
                     ))}
                     {placeholder}

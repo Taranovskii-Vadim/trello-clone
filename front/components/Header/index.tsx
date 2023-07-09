@@ -7,7 +7,7 @@ import { useStore } from '@/store/board';
 import { useDebounce } from './hooks';
 
 const Header = (): JSX.Element => {
-  const handleSearch = useStore((state) => state.searchData);
+  const handleSearch = useStore((state) => state.searchNote);
   const debouncedSearch = useDebounce(handleSearch, 500);
 
   return (

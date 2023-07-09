@@ -13,9 +13,10 @@ export type Board = Record<Status, Note[]>;
 
 export type State = {
   state: Board;
-  fetchData: () => Promise<void>;
-  searchData: (value: string) => void;
+  fetchNotes: () => Promise<void>;
+  searchNote: (value: string) => void;
   dragAndDropData: (value: DropResult) => void;
+  deleteNote: (id: number, status: Status) => Promise<void>;
 };
 
 export type FetchResponseDTO = {

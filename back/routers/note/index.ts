@@ -16,4 +16,13 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+router.delete('/', async (req: Request<any, any, any, { id: string }>, res: Response) => {
+  try {
+    await database.query('DELETE FROM note where id=$1', [req.query.id]);
+    res.json();
+  } catch (e) {
+    console.error(e);
+  }
+});
+
 export default router;

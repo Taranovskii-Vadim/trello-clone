@@ -9,21 +9,36 @@ let HASH: Board;
 
 export const useStore = create<State>((set, get) => ({
   state: { todo: [], inprogress: [], done: [] },
-  fetchData: async () => {
-    const { data } = await axiosInstance.get<FetchResponseDTO>('/notes');
+  fetchNotes: async () => {
+    try {
+      const { data } = await axiosInstance.get<FetchResponseDTO>('/notes');
 
-    HASH = data.notes.reduce(
-      (acc: Board, item) => {
-        acc[item.status] = [...acc[item.status], item];
+      HASH = data.notes.reduce(
+        (acc: Board, item) => {
+          acc[item.status] = [...acc[item.status], item];
 
-        return acc;
-      },
-      { todo: [], inprogress: [], done: [] } as Board,
-    );
+          return acc;
+        },
+        { todo: [], inprogress: [], done: [] } as Board,
+      );
 
-    set({ state: HASH });
+      set({ state: HASH });
+    } catch (e) {
+      console.error(e);
+    }
   },
-  searchData: (value) => {
+  deleteNote: async (id, status) => {
+    try {
+      await axiosInstance.delete(`/notes?id=${id}`);
+
+      HASH[status] = HASH[status].filter((item) => item.id !== id);
+
+      set({ state: HASH });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  searchNote: (value) => {
     if (HASH) {
       const filtered = Object.entries(HASH).map((item) => [
         item[0],
