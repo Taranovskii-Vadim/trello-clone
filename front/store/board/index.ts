@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { create } from 'zustand';
 
-import { Board, State, FetchResponseDTO, PatchResponseDTO, PostResponseDTO } from './types';
+import { Board, State, FetchResponseDTO, PatchResponseDTO, PostResponseDTO, Note } from './types';
 
 const axiosInstance = axios.create({ baseURL: 'http://localhost:3001/api' });
 
@@ -27,18 +27,20 @@ export const useStore = create<State>((set, get) => ({
       console.error(e);
     }
   },
-  addNote: async (noteConfig, image) => {
+  addNote: async (noteConfig, file) => {
     try {
-      if (image) {
-        const formData = new FormData();
-        formData.append('file', image);
+      let image: Note['image'] = null;
 
-        await axiosInstance.post('/uploads', formData);
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        image = (await axiosInstance.post<{ filename: string }>('/files', formData)).data.filename;
       }
 
-      const { data } = await axiosInstance.post<PostResponseDTO>('/notes', noteConfig);
+      const { data } = await axiosInstance.post<PostResponseDTO>('/notes', { ...noteConfig, image });
 
-      HASH[noteConfig.status].push({ ...data.note, image: image ? URL.createObjectURL(image) : null });
+      HASH[noteConfig.status].push({ ...data.note, image: file ? URL.createObjectURL(file) : null });
 
       set({ state: HASH });
     } catch (e) {

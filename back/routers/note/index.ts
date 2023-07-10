@@ -16,14 +16,15 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/', async (req: Request<any, any, Pick<Note, 'title' | 'status'>>, res: Response) => {
+router.post('/', async (req: Request<any, any, Omit<Note, 'id' | 'user_id'>>, res: Response) => {
   try {
     const title = req.body.title;
+    const image = req.body.image;
     const status = req.body.status;
 
     const { rows } = await database.query<Note>(
-      'INSERT INTO note(title, status, user_id) VALUES ($1, $2, $3) RETURNING id',
-      [title, status, 1],
+      'INSERT INTO note(title, status, image, user_id) VALUES ($1, $2, $3, $4) RETURNING id',
+      [title, status, image, 1],
     );
 
     res.json({ note: { id: rows[0].id, title, status } });
