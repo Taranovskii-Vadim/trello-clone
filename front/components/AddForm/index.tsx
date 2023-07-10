@@ -16,8 +16,10 @@ const AddForm = ({ status }: Props): JSX.Element => {
   const handleOpen = (): void => setIsOpen((prev) => !prev);
 
   const handleAdd = (): void => {
-    handleAddNote({ title: value, status });
-    setValue('');
+    if (value) {
+      handleAddNote({ title: value, status });
+      setValue('');
+    }
     setIsOpen(false);
   };
 

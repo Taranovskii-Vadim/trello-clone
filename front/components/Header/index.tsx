@@ -11,7 +11,7 @@ const Header = (): JSX.Element => {
   const debouncedSearch = useDebounce(handleSearch, 500);
 
   return (
-    <header className="px-6 md:px-4 py-4 md:py-2 flex flex-col md:flex-row items-center p-5">
+    <header className="px-6 md:px-4 py-4 md:py-2 mb-6 flex flex-col md:flex-row items-center">
       <Image
         width={200}
         height={200}

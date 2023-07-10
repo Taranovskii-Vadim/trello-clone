@@ -15,7 +15,7 @@ const Board = (): JSX.Element => {
   }, [fetchNotes]);
 
   return (
-    <main>
+    <main className="px-6 md:px-4">
       <DragDropContext onDragEnd={dragAndDropData}>
         <Droppable droppableId="board" direction="horizontal" type="column">
           {({ innerRef, droppableProps }) => (
