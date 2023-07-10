@@ -1,3 +1,4 @@
+import path from 'path';
 import { Router, Request, Response } from 'express';
 
 import uploadFile from '../../middleware/index';
@@ -12,9 +13,22 @@ router.post('/', uploadFile, async (req: Request, res: Response) => {
 
     res.json({ filename: req.file.filename });
   } catch (e) {
-    // res.status(500).json({
-    //   message: `Could not upload the file: ${req.file.originalname}. ${e}`,
-    // });
+    console.error(e);
+  }
+});
+
+router.get('/:name', async (req: Request<{ name: string }>, res: Response) => {
+  try {
+    const filename = req.params.name;
+    const directoryPath = path.resolve(__dirname, '..', '..', 'uploads', filename);
+
+    res.download(directoryPath, filename, (e) => {
+      if (e) {
+        res.status(500).send({ message: 'Could not download the file. ' + e });
+      }
+    });
+  } catch (e) {
+    console.error(e);
   }
 });
 

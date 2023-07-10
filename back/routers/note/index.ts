@@ -43,6 +43,7 @@ router.patch('/', async (req: Request<any, any, { status: Note['status'] }, { id
   }
 });
 
+// TODO change query parametrs to :parameters
 router.delete('/', async (req: Request<any, any, any, { id: string }>, res: Response) => {
   try {
     await database.query('DELETE FROM note where id=$1', [req.query.id]);

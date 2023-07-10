@@ -13,7 +13,17 @@ export const useStore = create<State>((set, get) => ({
     try {
       const { data } = await axiosInstance.get<FetchResponseDTO>('/notes');
 
-      HASH = data.notes.reduce(
+      const dataWithImages = await Promise.all(
+        data.notes.map(async (item) => {
+          if (!item.image) return item;
+
+          const response = await axiosInstance.get(`/files/${item.image}`, { responseType: 'blob' });
+
+          return { ...item, image: URL.createObjectURL(response.data) };
+        }),
+      );
+
+      HASH = dataWithImages.reduce(
         (acc: Board, item) => {
           acc[item.status] = [...acc[item.status], item];
 
