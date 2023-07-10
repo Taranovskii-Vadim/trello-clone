@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 import { DraggableProvidedDragHandleProps, DraggableProvidedDraggableProps } from 'react-beautiful-dnd';
 
@@ -28,7 +29,17 @@ const Card = ({ data, innerRef, dragHandleProps, draggableProps }: Props): JSX.E
           <XCircleIcon className="ml-5 h-8 w-8" />
         </button>
       </div>
-      {data.image ? <div>image</div> : null}
+      {data.image ? (
+        <div className="h-full w-full rounded-b-md">
+          <Image
+            width={400}
+            height={200}
+            src={data.image}
+            alt="note image"
+            className="w-full object-contain rounded-b-md"
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

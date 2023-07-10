@@ -27,11 +27,18 @@ export const useStore = create<State>((set, get) => ({
       console.error(e);
     }
   },
-  addNote: async (config) => {
+  addNote: async (noteConfig, image) => {
     try {
-      const { data } = await axiosInstance.post<PostResponseDTO>('/notes', config);
+      if (image) {
+        const formData = new FormData();
+        formData.append('file', image);
 
-      HASH[config.status].push({ ...data.note, image: null });
+        await axiosInstance.post('/uploads', formData);
+      }
+
+      const { data } = await axiosInstance.post<PostResponseDTO>('/notes', noteConfig);
+
+      HASH[noteConfig.status].push({ ...data.note, image: image ? URL.createObjectURL(image) : null });
 
       set({ state: HASH });
     } catch (e) {

@@ -17,7 +17,7 @@ export type State = {
   searchNote: (value: string) => void;
   dragAndDropData: (value: DropResult) => Promise<void>;
   deleteNote: (id: number, status: Status) => Promise<void>;
-  addNote: (config: Pick<Note, 'title' | 'status'>) => Promise<void>;
+  addNote: (noteConfig: Pick<Note, 'title' | 'status'>, image?: File) => Promise<void>;
 };
 
 export type FetchResponseDTO = {
