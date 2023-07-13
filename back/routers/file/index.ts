@@ -1,7 +1,7 @@
 import path from 'path';
 import { Router, Request, Response } from 'express';
 
-import uploadFile from '../../middleware/index';
+import { uploadFile } from '../../middleware';
 
 const router = Router();
 

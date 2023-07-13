@@ -1,14 +1,14 @@
-import { Router, Request, Response } from 'express';
+import { Request, Router, Response } from 'express';
 
 import { database } from '../../db';
 
-import { Note } from './types';
+import { CreateDTO, Note, PatchDTO } from './types';
 
 const router = Router();
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async ({ user }: Request, res: Response) => {
   try {
-    const { rows } = await database.query<Note>('SELECT * FROM note where user_id=$1', [1]);
+    const { rows } = await database.query<Note>('SELECT * FROM note where user_id=$1', [user.id]);
 
     res.json({ notes: rows.map(({ user_id, ...others }) => others) });
   } catch (e) {
@@ -16,15 +16,15 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/', async (req: Request<any, any, Omit<Note, 'id' | 'user_id'>>, res: Response) => {
+router.post('/', async ({ body, user }: Request<any, any, CreateDTO>, res: Response) => {
   try {
-    const title = req.body.title;
-    const image = req.body.image;
-    const status = req.body.status;
+    const title = body.title;
+    const image = body.image;
+    const status = body.status;
 
     const { rows } = await database.query<Note>(
       'INSERT INTO note(title, status, image, user_id) VALUES ($1, $2, $3, $4) RETURNING id',
-      [title, status, image, 1],
+      [title, status, image, user.id],
     );
 
     res.json({ note: { id: rows[0].id, title, status } });
@@ -33,20 +33,19 @@ router.post('/', async (req: Request<any, any, Omit<Note, 'id' | 'user_id'>>, re
   }
 });
 
-router.patch('/', async (req: Request<any, any, { status: Note['status'] }, { id: string }>, res: Response) => {
+router.patch('/:id', async ({ body, params }: Request<{ id: string }, any, PatchDTO>, res: Response) => {
   try {
-    await database.query('UPDATE note SET status=$1 WHERE id=$2', [req.body.status, req.query.id]);
+    await database.query('UPDATE note SET status=$1 WHERE id=$2', [body.status, params.id]);
 
-    res.json({ status: req.body.status });
+    res.json({ status: body.status });
   } catch (e) {
     console.error(e);
   }
 });
 
-// TODO change query parametrs to :parameters
-router.delete('/', async (req: Request<any, any, any, { id: string }>, res: Response) => {
+router.delete('/:id', async ({ params }: Request<{ id: string }>, res: Response) => {
   try {
-    await database.query('DELETE FROM note where id=$1', [req.query.id]);
+    await database.query('DELETE FROM note where id=$1', [params.id]);
     res.json();
   } catch (e) {
     console.error(e);

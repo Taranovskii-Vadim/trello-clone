@@ -2,7 +2,6 @@ import Board from '@/components/Board';
 import Header from '@/components/Header';
 
 // action items
-// 4) add auth logic
 // 5) components refactor
 
 const Home = (): JSX.Element => (
