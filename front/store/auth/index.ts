@@ -8,12 +8,14 @@ type State = {
 };
 
 export const useAuth = create<State>((set) => ({
-  isAuth: false,
+  isAuth: !!localStorage.getItem('token'),
   signIn: async (login, password) => {
     try {
       const { data } = await api.post<{ token: string }>('/auth', { login, password });
 
       api.defaults.headers.common = { Authorization: data.token };
+
+      localStorage.setItem('token', data.token);
 
       set({ isAuth: true });
     } catch (e) {
