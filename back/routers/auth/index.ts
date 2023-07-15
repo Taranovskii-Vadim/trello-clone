@@ -7,18 +7,13 @@ import { DbUser, LoginDTO } from './types';
 
 const router = Router();
 
-// 5 min
-const maxAge = 300000;
-// 1 min
-// const maxAge = 60000;
-
 router.post('/', async ({ body }: Request<any, any, LoginDTO>, res: Response) => {
   try {
     const { login, password } = body;
 
-    const { rows } = await database.query('SELECT * FROM users where login=$1', [`${login}`]);
+    const { rows } = await database.query<DbUser>('SELECT * FROM users where login=$1', [`${login}`]);
 
-    const user = rows[0] as DbUser | undefined;
+    const user = rows[0];
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -30,7 +25,7 @@ router.post('/', async ({ body }: Request<any, any, LoginDTO>, res: Response) =>
       return res.status(400).json({ message: 'Incorrect password' });
     }
 
-    const token = jwt.sign({ id: user.id, login: user.login } as Request['user'], 'AVACATO', { expiresIn: '10h' });
+    const token = jwt.sign({ id: user.id, login: user.login, avatar: user.avatar }, 'AVACATO', { expiresIn: '10h' });
 
     return res.json({ token });
   } catch (e) {

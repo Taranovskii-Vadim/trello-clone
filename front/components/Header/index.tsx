@@ -1,16 +1,23 @@
 'use client';
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 import Logo from '@/ui/Logo';
 
 import { useStore } from '@/store/board';
+import { useProfile } from '@/store/profile';
 
 import { useDebounce } from './hooks';
 
 const Header = (): JSX.Element => {
+  const { data, fetchData } = useProfile();
   const handleSearch = useStore((state) => state.searchNote);
   const debouncedSearch = useDebounce(handleSearch, 500);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <header className="px-6 md:px-4 py-4 md:py-2 mb-6 flex flex-col md:flex-row items-center">
@@ -29,8 +36,8 @@ const Header = (): JSX.Element => {
           width={40}
           height={40}
           alt="user avatar"
+          src={data?.avatar || ''}
           className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
         />
       </div>
     </header>

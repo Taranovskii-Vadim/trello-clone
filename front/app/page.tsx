@@ -8,6 +8,8 @@ import LoginForm from '@/components/LoginForm';
 // action items
 // 5) components refactor
 
+// TODO big todo, we can move auth logic to layout and here we can fetch profile and notes for header and board components
+
 const Home = (): JSX.Element => {
   const isAuth = useAuth((state) => state.isAuth);
 
