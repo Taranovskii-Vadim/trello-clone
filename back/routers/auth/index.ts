@@ -16,7 +16,8 @@ router.post('/', async ({ body }: Request<any, any, LoginDTO>, res: Response) =>
   try {
     const { login, password } = body;
 
-    const { rows } = await database.query('SELECT * FROM user where login=$1', [login]);
+    const { rows } = await database.query('SELECT * FROM users where login=$1', [`${login}`]);
+
     const user = rows[0] as DbUser | undefined;
 
     if (!user) {
@@ -29,9 +30,9 @@ router.post('/', async ({ body }: Request<any, any, LoginDTO>, res: Response) =>
       return res.status(400).json({ message: 'Incorrect password' });
     }
 
-    const token = jwt.sign({ id: user.id, login: user.login } as Request['user'], 'AVACATO');
+    const token = jwt.sign({ id: user.id, login: user.login } as Request['user'], 'AVACATO', { expiresIn: '10h' });
 
-    return res.cookie('token', token, { maxAge }).json();
+    return res.json({ token });
   } catch (e) {
     console.error(e);
   }

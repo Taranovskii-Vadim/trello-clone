@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/', async ({ user }: Request, res: Response) => {
   try {
-    const { rows } = await database.query<Note>('SELECT * FROM note where user_id=$1', [user.id]);
+    const { rows } = await database.query<Note>('SELECT * FROM notes where user_id=$1', [user.id]);
 
     res.json({ notes: rows.map(({ user_id, ...others }) => others) });
   } catch (e) {
@@ -23,7 +23,7 @@ router.post('/', async ({ body, user }: Request<any, any, CreateDTO>, res: Respo
     const status = body.status;
 
     const { rows } = await database.query<Note>(
-      'INSERT INTO note(title, status, image, user_id) VALUES ($1, $2, $3, $4) RETURNING id',
+      'INSERT INTO notes(title, status, image, user_id) VALUES ($1, $2, $3, $4) RETURNING id',
       [title, status, image, user.id],
     );
 
@@ -35,7 +35,7 @@ router.post('/', async ({ body, user }: Request<any, any, CreateDTO>, res: Respo
 
 router.patch('/:id', async ({ body, params }: Request<{ id: string }, any, PatchDTO>, res: Response) => {
   try {
-    await database.query('UPDATE note SET status=$1 WHERE id=$2', [body.status, params.id]);
+    await database.query('UPDATE notes SET status=$1 WHERE id=$2', [body.status, params.id]);
 
     res.json({ status: body.status });
   } catch (e) {
@@ -45,7 +45,7 @@ router.patch('/:id', async ({ body, params }: Request<{ id: string }, any, Patch
 
 router.delete('/:id', async ({ params }: Request<{ id: string }>, res: Response) => {
   try {
-    await database.query('DELETE FROM note where id=$1', [params.id]);
+    await database.query('DELETE FROM notes where id=$1', [params.id]);
     res.json();
   } catch (e) {
     console.error(e);

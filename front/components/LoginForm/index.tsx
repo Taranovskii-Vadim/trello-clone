@@ -1,13 +1,18 @@
 'use client';
 import { FormEvent } from 'react';
 
+import { useAuth } from '@/store/auth';
+
 import Logo from '@/ui/Logo';
 import Input from '@/ui/Input';
 
 const LoginForm = (): JSX.Element => {
+  const signIn = useAuth((state) => state.signIn);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    // e.target[0].value, e.target[1].value
+
+    signIn(e.target[0].value, e.target[1].value);
   };
 
   return (

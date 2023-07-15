@@ -1,9 +1,7 @@
-import axios from 'axios';
 import { create } from 'zustand';
 
+import { api } from '../api';
 import { Board, State, FetchResponseDTO, PatchResponseDTO, PostResponseDTO, Note } from './types';
-
-const axiosInstance = axios.create({ baseURL: 'http://localhost:3001/api' });
 
 let HASH: Board;
 
@@ -11,13 +9,13 @@ export const useStore = create<State>((set, get) => ({
   state: { todo: [], inprogress: [], done: [] },
   fetchNotes: async () => {
     try {
-      const { data } = await axiosInstance.get<FetchResponseDTO>('/notes');
+      const { data } = await api.get<FetchResponseDTO>('/notes');
 
       const dataWithImages = await Promise.all(
         data.notes.map(async (item) => {
           if (!item.image) return item;
 
-          const response = await axiosInstance.get(`/files/${item.image}`, { responseType: 'blob' });
+          const response = await api.get(`/files/${item.image}`, { responseType: 'blob' });
 
           return { ...item, image: URL.createObjectURL(response.data) };
         }),
@@ -45,10 +43,10 @@ export const useStore = create<State>((set, get) => ({
         const formData = new FormData();
         formData.append('file', file);
 
-        image = (await axiosInstance.post<{ filename: string }>('/files', formData)).data.filename;
+        image = (await api.post<{ filename: string }>('/files', formData)).data.filename;
       }
 
-      const { data } = await axiosInstance.post<PostResponseDTO>('/notes', { ...noteConfig, image });
+      const { data } = await api.post<PostResponseDTO>('/notes', { ...noteConfig, image });
 
       HASH[noteConfig.status].push({ ...data.note, image: file ? URL.createObjectURL(file) : null });
 
@@ -59,7 +57,7 @@ export const useStore = create<State>((set, get) => ({
   },
   deleteNote: async (id, status) => {
     try {
-      await axiosInstance.delete(`/notes/${id}`);
+      await api.delete(`/notes/${id}`);
 
       HASH[status] = HASH[status].filter((item) => item.id !== id);
 
@@ -102,7 +100,7 @@ export const useStore = create<State>((set, get) => ({
         startNotes.splice(destination.index, 0, moved);
         set({ state: { ...state, [start[0]]: startNotes } });
       } else {
-        const { data } = await axiosInstance.patch<PatchResponseDTO>(`/notes/${moved.id}`, { status: finish[0] });
+        const { data } = await api.patch<PatchResponseDTO>(`/notes/${moved.id}`, { status: finish[0] });
 
         finishNotes.splice(destination.index, 0, { ...moved, status: data.status });
 

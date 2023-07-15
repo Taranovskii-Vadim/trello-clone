@@ -18,7 +18,7 @@ let storage = multer.diskStorage({
 export const uploadFile = util.promisify(multer({ storage: storage, limits: { fileSize: maxSize } }).single('file'));
 
 export const authMiddleWare = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.cookies && req.cookies.token;
+  const token = req.headers.authorization;
 
   if (token) {
     const user = jwt.verify(token, 'AVACATO') as Request['user'];
