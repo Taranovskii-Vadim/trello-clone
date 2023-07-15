@@ -4,6 +4,8 @@ import { PaperAirplaneIcon, PhotoIcon, PlusCircleIcon } from '@heroicons/react/2
 import { useStore } from '@/store/board';
 import { Status } from '@/store/board/types';
 
+import Input from '@/ui/Input';
+
 interface Props {
   status: Status;
 }
@@ -51,11 +53,7 @@ const AddForm = ({ status }: Props): JSX.Element => {
     <div className={`flex items-center ${isOpen ? 'justify-between' : 'justify-end'}`}>
       {isOpen ? (
         <>
-          <input
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-1 px-2 mr-2"
-          />
+          <Input value={value} onChange={(e) => setValue(e.target.value)} />
           <input hidden type="file" ref={fileRef} onChange={handleSetFile} />
           {!preview ? (
             <button className="text-green-500 hover:text-green-600" onClick={handleChooseFile}>

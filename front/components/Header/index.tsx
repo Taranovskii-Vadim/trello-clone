@@ -2,6 +2,8 @@
 import Image from 'next/image';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
+import Logo from '@/ui/Logo';
+
 import { useStore } from '@/store/board';
 
 import { useDebounce } from './hooks';
@@ -12,13 +14,7 @@ const Header = (): JSX.Element => {
 
   return (
     <header className="px-6 md:px-4 py-4 md:py-2 mb-6 flex flex-col md:flex-row items-center">
-      <Image
-        width={200}
-        height={200}
-        alt="trello logo"
-        src="https://links.papareact.com/c2cdd5"
-        className="w-40 pb-10 md:pb-0 object-contain"
-      />
+      <Logo />
       <div className="flex items-center space-x-5 flex-1 justify-end w-full">
         <div className="flex items-center bg-white px-4 rounded-md shadow-md flex-1 md:flex-initial">
           <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />

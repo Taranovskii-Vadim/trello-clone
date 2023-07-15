@@ -59,7 +59,7 @@ export const useStore = create<State>((set, get) => ({
   },
   deleteNote: async (id, status) => {
     try {
-      await axiosInstance.delete(`/notes?id=${id}`);
+      await axiosInstance.delete(`/notes/${id}`);
 
       HASH[status] = HASH[status].filter((item) => item.id !== id);
 
@@ -102,7 +102,7 @@ export const useStore = create<State>((set, get) => ({
         startNotes.splice(destination.index, 0, moved);
         set({ state: { ...state, [start[0]]: startNotes } });
       } else {
-        const { data } = await axiosInstance.patch<PatchResponseDTO>(`/notes?id=${moved.id}`, { status: finish[0] });
+        const { data } = await axiosInstance.patch<PatchResponseDTO>(`/notes/${moved.id}`, { status: finish[0] });
 
         finishNotes.splice(destination.index, 0, { ...moved, status: data.status });
 
