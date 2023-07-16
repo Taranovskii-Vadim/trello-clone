@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 import { useAuth } from '@/store/auth';
 
@@ -8,8 +8,13 @@ import Input from '@/ui/Input';
 
 const LoginForm = (): JSX.Element => {
   const { signIn, signUp } = useAuth();
+  const [preview, setPreview] = useState('');
   const [avatar, setAvatar] = useState<File>();
   const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
+
+  useEffect(() => {
+    setPreview(avatar ? URL.createObjectURL(avatar) : '');
+  }, [avatar]);
 
   const handleSetAvatar = (e: ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.files![0];
@@ -35,7 +40,25 @@ const LoginForm = (): JSX.Element => {
       </div>
       <Input className="mb-4" placeholder="Логин..." />
       <Input className="mb-4" type="password" placeholder="Пароль..." />
-      {mode === 'signUp' ? <input type="file" onChange={handleSetAvatar} /> : null}
+      {mode === 'signUp' ? (
+        <div className="flex items-center space-x-6 mb-4">
+          <div className="shrink-0">
+            <img
+              src={
+                preview || 'https://lh3.googleusercontent.com/a-/AFdZucpC_6WFBIfaAbPHBwGM9z8SxyM1oV4wB4Ngwp_UyQ=s96-c'
+              }
+              alt="default avatar"
+              className="h-16 w-16 object-cover rounded-full"
+              onClick={() => setAvatar(undefined)}
+            />
+          </div>
+          <input
+            type="file"
+            onChange={handleSetAvatar}
+            className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-green-700 hover:file:bg-violet-100"
+          />
+        </div>
+      ) : null}
       <button
         type="submit"
         className="text-white w-full bg-green-500 hover:bg-green-600 uppercase rounded-md mb-2 py-2 px-6"
