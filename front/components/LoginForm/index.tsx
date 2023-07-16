@@ -32,7 +32,7 @@ const LoginForm = (): JSX.Element => {
         type="submit"
         className="text-white w-full bg-green-500 hover:bg-green-600 uppercase rounded-md mb-2 py-2 px-6"
       >
-        войти
+        {mode === 'signIn' ? 'войти' : 'зарегистрироваться'}
       </button>
       <p>
         {mode === 'signIn' ? 'Нет аккаунта' : 'Есть аккаунт'}?{' '}

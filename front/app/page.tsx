@@ -9,7 +9,7 @@ import Header from '@/components/Header';
 import LoginForm from '@/components/LoginForm';
 
 // action items
-// 3) signUp logic
+// 3) logout logic
 // 4) choose avatar logic
 // 5) components refactor
 
