@@ -5,7 +5,7 @@ import api from '../api';
 type State = {
   isAuth: boolean;
   logout: () => void;
-  signUp: (login: string, password: string) => Promise<void>;
+  signUp: (login: string, password: string, avatar: File | undefined) => Promise<void>;
   signIn: (login: string, password: string) => Promise<void>;
 };
 
@@ -16,9 +16,18 @@ export const useAuth = create<State>((set) => ({
 
     set({ isAuth: false });
   },
-  signUp: async (login, password) => {
+  signUp: async (login, password, file) => {
     try {
-      const { data } = await api.post<{ token: string }>('/auth/signUp', { login, password });
+      let avatar: string | null = null;
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        avatar = (await api.post<{ filename: string }>('/auth/signUp/avatar', formData)).data.filename;
+      }
+
+      const { data } = await api.post<{ token: string }>('/auth/signUp', { login, password, avatar });
 
       api.defaults.headers.common = { Authorization: data.token };
 

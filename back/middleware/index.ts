@@ -4,7 +4,9 @@ import multer from 'multer';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-const maxSize = 2 * 1024 * 1024;
+// TODO when delete note we also should delete file from uploads
+
+const fileSize = 2 * 1024 * 1024;
 
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -15,7 +17,7 @@ let storage = multer.diskStorage({
   },
 });
 
-export const uploadFile = util.promisify(multer({ storage: storage, limits: { fileSize: maxSize } }).single('file'));
+export const uploadFile = util.promisify(multer({ storage, limits: { fileSize } }).single('file'));
 
 export const authMiddleWare = (req: Request, res: Response, next: NextFunction) => {
   try {
