@@ -51,8 +51,6 @@ router.post('/signIn', async ({ body }: Request<any, any, SignInDTO>, res: Respo
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // TODO do magic with password hash (bcrypt, argon)
-
     if (user.password !== password) {
       return res.status(400).json({ message: 'Incorrect password' });
     }

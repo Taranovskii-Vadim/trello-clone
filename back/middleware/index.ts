@@ -4,8 +4,6 @@ import multer from 'multer';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-// TODO when delete note we also should delete file from uploads
-
 const fileSize = 2 * 1024 * 1024;
 
 let storage = multer.diskStorage({
