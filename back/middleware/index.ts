@@ -23,7 +23,7 @@ export const authMiddleWare = (req: Request, res: Response, next: NextFunction) 
 
     if (!token) throw new Error('JWT token is not defined');
 
-    const user = jwt.verify(token, 'AVACATO') as Request['user'];
+    const { exp, iat, ...user } = jwt.verify(token, 'AVACATO') as { exp: number; iat: number } & Request['user'];
     req.user = user;
 
     return next();

@@ -9,6 +9,8 @@ import Header from '@/components/Header';
 import LoginForm from '@/components/LoginForm';
 
 // action items
+// 3) signUp logic
+// 4) choose avatar logic
 // 5) components refactor
 
 // TODO big todo, we can move auth logic to layout and here we can fetch profile and notes for header and board components
