@@ -1,5 +1,8 @@
 'use client';
+import { useMemo } from 'react';
 import { useAuth } from '@/store/auth';
+
+import api from '@/store/api';
 
 import Board from '@/components/Board';
 import Header from '@/components/Header';
@@ -11,7 +14,22 @@ import LoginForm from '@/components/LoginForm';
 // TODO big todo, we can move auth logic to layout and here we can fetch profile and notes for header and board components
 
 const Home = (): JSX.Element => {
-  const isAuth = useAuth((state) => state.isAuth);
+  const { isAuth, logout } = useAuth();
+
+  useMemo(() => {
+    api.interceptors.response.use(
+      (r) => r,
+      (error) => {
+        const { status } = error.response;
+
+        if (status === 401) {
+          logout();
+        }
+
+        return error;
+      },
+    );
+  }, [logout]);
 
   return (
     <>

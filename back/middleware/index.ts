@@ -18,13 +18,16 @@ let storage = multer.diskStorage({
 export const uploadFile = util.promisify(multer({ storage: storage, limits: { fileSize: maxSize } }).single('file'));
 
 export const authMiddleWare = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization;
+  try {
+    const token = req.headers.authorization;
 
-  if (token) {
+    if (!token) throw new Error('JWT token is not defined');
+
     const user = jwt.verify(token, 'AVACATO') as Request['user'];
     req.user = user;
-    return next();
-  }
 
-  res.status(401).json({ message: 'Session expired' });
+    return next();
+  } catch (e) {
+    res.status(401).json(e);
+  }
 };

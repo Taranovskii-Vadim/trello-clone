@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { api } from '../api';
+import api from '../api';
 import { Board, State, FetchResponseDTO, PatchResponseDTO, PostResponseDTO, Note } from './types';
 
 let HASH: Board;
