@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { Request, Router, Response } from 'express';
 
 import { database } from '../../db';
@@ -22,7 +24,7 @@ router.post('/', async ({ body, user }: Request<any, any, CreateDTO>, res: Respo
     const image = body.image;
     const status = body.status;
 
-    const { rows } = await database.query<Note>(
+    const { rows } = await database.query<Pick<Note, 'id'>>(
       'INSERT INTO notes(title, status, image, user_id) VALUES ($1, $2, $3, $4) RETURNING id',
       [title, status, image, user.id],
     );
@@ -43,9 +45,17 @@ router.patch('/:id', async ({ body, params }: Request<{ id: string }, any, Patch
   }
 });
 
-router.delete('/:id', async ({ params }: Request<{ id: string }>, res: Response) => {
+router.delete('/:id', async ({ params: { id } }: Request<{ id: string }>, res: Response) => {
   try {
-    await database.query('DELETE FROM notes where id=$1', [params.id]);
+    const { rows } = await database.query<Pick<Note, 'image'>>('DELETE FROM notes where id=$1 RETURNING image', [id]);
+    const image = rows[0].image;
+
+    if (image) {
+      fs.unlink(path.resolve(__dirname, '..', '..', 'uploads', image), (err) => {
+        if (err) throw err;
+      });
+    }
+
     res.json();
   } catch (e) {
     console.error(e);

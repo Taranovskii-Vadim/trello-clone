@@ -11,7 +11,6 @@ import LoginForm from '@/components/LoginForm';
 // action items
 // 5) components refactor
 
-// TODO delete file from uploads when delete note
 // TODO hash password before create user in db (bcrypt, argon)
 // TODO big todo, we can move auth logic to layout and here we can fetch profile and notes for header and board components
 
