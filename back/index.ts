@@ -11,6 +11,9 @@ const server = express();
 server.use(json());
 server.use(cors({ origin: 'http://localhost:3000' }));
 
+// possible options
+// TODO handle server errors
+
 routers.forEach(({ prefix, router, isAuth = true }) => {
   const completedPrefix = `/api/${prefix}`;
 
