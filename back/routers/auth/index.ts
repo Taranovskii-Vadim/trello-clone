@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
 import argon from 'argon2';
+import jwt from 'jsonwebtoken';
 import { Response, Request, Router } from 'express';
 
 import database from '../../db';
@@ -13,7 +13,7 @@ const getJWT = (data: JWTUser) => jwt.sign(data, 'AVACATO', { expiresIn: '10h' }
 
 router.post('/signUp/avatar', uploadFile, async (req: Request, res: Response) => {
   try {
-    if (req.file === undefined) {
+    if (!req.file) {
       return res.status(400).json({ message: 'Please upload a file' });
     }
 
@@ -36,7 +36,7 @@ router.post('/signUp', async ({ body }: Request<any, any, SignUpDTO>, res: Respo
 
     const token = getJWT({ id: rows[0].id, login, avatar });
 
-    return res.json({ token });
+    res.json({ token });
   } catch (e) {
     console.error(e);
   }
@@ -60,7 +60,7 @@ router.post('/signIn', async ({ body }: Request<any, any, SignInDTO>, res: Respo
 
     const token = getJWT({ id: user.id, login: user.login, avatar: user.avatar });
 
-    return res.json({ token });
+    res.json({ token });
   } catch (e) {
     console.error(e);
   }

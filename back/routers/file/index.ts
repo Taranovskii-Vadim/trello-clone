@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/', uploadFile, async (req: Request, res: Response) => {
   try {
-    if (req.file === undefined) {
+    if (!req.file) {
       return res.status(400).json({ message: 'Please upload a file' });
     }
 
@@ -24,7 +24,7 @@ router.get('/:name', async (req: Request<{ name: string }>, res: Response) => {
 
     res.download(directoryPath, filename, (e) => {
       if (e) {
-        res.status(500).send({ message: 'Could not download the file. ' + e });
+        res.status(500).send({ message: 'Could not download the file' + e });
       }
     });
   } catch (e) {
