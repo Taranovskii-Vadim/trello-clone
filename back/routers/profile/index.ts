@@ -2,9 +2,9 @@ import { Response, Request, Router } from 'express';
 
 const router = Router();
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async ({ user }: Request, res: Response) => {
   try {
-    res.json({ profile: req.user });
+    res.json({ profile: user });
   } catch (e) {
     console.error(e);
   }
