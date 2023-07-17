@@ -2,14 +2,14 @@ import jwt from 'jsonwebtoken';
 import argon from 'argon2';
 import { Response, Request, Router } from 'express';
 
-import { database } from '../../db';
+import database from '../../db';
 import { uploadFile } from '../../middleware';
 
-import { DbUser, SignInDTO, SignUpDTO } from './types';
+import { User, SignInDTO, SignUpDTO } from './types';
 
 const router = Router();
 
-const getJWT = (data: Omit<DbUser, 'password'>) => jwt.sign(data, 'AVACATO', { expiresIn: '10h' });
+const getJWT = (data: JWTUser) => jwt.sign(data, 'AVACATO', { expiresIn: '10h' });
 
 router.post('/signUp/avatar', uploadFile, async (req: Request, res: Response) => {
   try {
@@ -46,7 +46,7 @@ router.post('/signIn', async ({ body }: Request<any, any, SignInDTO>, res: Respo
   try {
     const { login, password } = body;
 
-    const { rows } = await database.query<DbUser>('SELECT * FROM users where login=$1', [`${login}`]);
+    const { rows } = await database.query<User>('SELECT * FROM users where login=$1', [`${login}`]);
 
     const user = rows[0];
 

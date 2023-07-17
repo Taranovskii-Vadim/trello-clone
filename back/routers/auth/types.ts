@@ -1,5 +1,5 @@
-export type DbUser = { id: number; login: string; password: string; avatar: string | null };
+export type User = JWTUser & { password: string };
 
-export type SignUpDTO = Omit<DbUser, 'id'>;
+export type SignUpDTO = Omit<User, 'id'>;
 
-export type SignInDTO = Pick<DbUser, 'login' | 'password'>;
+export type SignInDTO = Pick<User, 'login' | 'password'>;

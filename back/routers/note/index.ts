@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { Request, Router, Response } from 'express';
 
-import { database } from '../../db';
+import database from '../../db';
 
-import { CreateDTO, Note, PatchDTO } from './types';
+import { Note, CreateDTO, PatchDTO } from './types';
 
 const router = Router();
 

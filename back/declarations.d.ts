@@ -1,5 +1,11 @@
+declare type JWTUser = {
+  id: number;
+  login: string;
+  avatar: string | null;
+};
+
 declare namespace Express {
-  interface Request {
-    user: { id: number; login: string; avatar: string };
+  export interface Request {
+    user: JWTUser;
   }
 }

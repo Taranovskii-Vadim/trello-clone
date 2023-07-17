@@ -2,7 +2,7 @@
   "name": "back",
   "version": "1.0.0",
   "scripts": {
-    "start": "nodemon index.ts"
+    "start": "nodemon --files index.ts"
   },
   "dependencies": {
     "argon2": "^0.30.3",
