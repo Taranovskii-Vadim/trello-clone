@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import argon from 'argon2';
 import { Response, Request, Router } from 'express';
 
 import { database } from '../../db';
@@ -26,9 +27,11 @@ router.post('/signUp', async ({ body }: Request<any, any, SignUpDTO>, res: Respo
   try {
     const { login, password, avatar } = body;
 
+    const hashedPassword = await argon.hash(password);
+
     const { rows } = await database.query(
       'INSERT INTO users(login, password, avatar) VALUES ($1, $2, $3) RETURNING id',
-      [login, password, avatar],
+      [login, hashedPassword, avatar],
     );
 
     const token = getJWT({ id: rows[0].id, login, avatar });
@@ -51,7 +54,7 @@ router.post('/signIn', async ({ body }: Request<any, any, SignInDTO>, res: Respo
       return res.status(404).json({ message: 'User not found' });
     }
 
-    if (user.password !== password) {
+    if (!(await argon.verify(user.password, password))) {
       return res.status(400).json({ message: 'Incorrect password' });
     }
 
