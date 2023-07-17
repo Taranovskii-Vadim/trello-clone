@@ -5,6 +5,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 import Logo from '@/ui/Logo';
 
+import { useAuth } from '@/store/auth';
 import { useStore } from '@/store/board';
 import { useProfile } from '@/store/profile';
 
@@ -12,6 +13,7 @@ import { useDebounce } from './hooks';
 
 const Header = (): JSX.Element => {
   const { data, fetchData } = useProfile();
+  const logout = useAuth((state) => state.logout);
   const handleSearch = useStore((state) => state.searchNote);
   const debouncedSearch = useDebounce(handleSearch, 500);
 
@@ -37,7 +39,8 @@ const Header = (): JSX.Element => {
           height={40}
           alt="user avatar"
           src={data?.avatar || ''}
-          className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+          onClick={() => logout()}
+          className="inline-block h-10 w-10 rounded-full ring-2 ring-white cursor-pointer"
         />
       </div>
     </header>

@@ -9,7 +9,6 @@ import Header from '@/components/Header';
 import LoginForm from '@/components/LoginForm';
 
 // action items
-// 3) logout logic
 // 5) components refactor
 
 // TODO delete file from uploads when delete note
