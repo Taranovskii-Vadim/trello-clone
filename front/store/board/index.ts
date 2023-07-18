@@ -5,7 +5,7 @@ import { Board, State, FetchResponseDTO, PatchResponseDTO, PostResponseDTO, Note
 
 let HASH: Board;
 
-export const useStore = create<State>((set, get) => ({
+export const useBoard = create<State>((set, get) => ({
   state: { todo: [], inprogress: [], done: [] },
   fetchNotes: async () => {
     try {

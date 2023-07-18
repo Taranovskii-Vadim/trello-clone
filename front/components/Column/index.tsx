@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Note, Status } from '@/store/board/types';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 import { DraggableProvidedDragHandleProps, DraggableProvidedDraggableProps } from 'react-beautiful-dnd';
 
-import { useStore } from '@/store/board';
+import { useBoard } from '@/store/board';
 import { Note } from '@/store/board/types';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const Card = ({ data, innerRef, dragHandleProps, draggableProps }: Props): JSX.Element => {
-  const handleDelete = useStore((state) => state.deleteNote);
+  const handleDelete = useBoard((state) => state.deleteNote);
 
   return (
     <div

@@ -1,12 +1,12 @@
 import { memo } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
-import { useStore } from '@/store/board';
+import { useBoard } from '@/store/board';
 
 import { useDebounce } from './hooks';
 
 const Search = (): JSX.Element => {
-  const handleSearch = useStore((state) => state.searchNote);
+  const handleSearch = useBoard((state) => state.searchNote);
   const debouncedSearch = useDebounce(handleSearch, 100);
 
   return (

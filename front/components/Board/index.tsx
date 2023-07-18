@@ -2,13 +2,13 @@
 import { useEffect } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-import { useStore } from '@/store/board';
+import { useBoard } from '@/store/board';
 import { Status } from '@/store/board/types';
 
 import Column from '../Column';
 
 const Board = (): JSX.Element => {
-  const { state, fetchNotes, dragAndDropData } = useStore();
+  const { state, fetchNotes, dragAndDropData } = useBoard();
 
   useEffect(() => {
     fetchNotes();

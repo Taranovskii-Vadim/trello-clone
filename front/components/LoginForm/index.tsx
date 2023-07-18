@@ -4,7 +4,6 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useAuth } from '@/store/auth';
 
 import Logo from '@/ui/Logo';
-import Input from '@/ui/Input';
 import { EMPTY_AVATAR } from '../constants';
 
 const LoginForm = (): JSX.Element => {
@@ -39,8 +38,8 @@ const LoginForm = (): JSX.Element => {
       <div className="flex justify-center mb-4">
         <Logo />
       </div>
-      <Input className="mb-4" placeholder="Логин..." />
-      <Input className="mb-4" type="password" placeholder="Пароль..." />
+      <input className="mb-4" placeholder="Логин..." />
+      <input className="mb-4" type="password" placeholder="Пароль..." />
       {mode === 'signUp' ? (
         <div className="flex items-center space-x-6 mb-4">
           <div className="shrink-0">
