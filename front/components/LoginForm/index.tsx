@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 
 import { useAuth } from '@/store/auth';
 
@@ -10,6 +10,8 @@ const LoginForm = (): JSX.Element => {
   const { signIn, signUp } = useAuth();
   const [preview, setPreview] = useState('');
   const [avatar, setAvatar] = useState<File>();
+  const loginRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
 
   useEffect(() => {
@@ -26,10 +28,15 @@ const LoginForm = (): JSX.Element => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    if (mode === 'signIn') {
-      signIn(e.target[0].value, e.target[1].value);
-    } else {
-      signUp(e.target[0].value, e.target[1].value, avatar);
+    if (loginRef.current && passwordRef.current) {
+      const login = loginRef.current.value;
+      const password = passwordRef.current.value;
+
+      if (mode === 'signIn') {
+        signIn(login, password);
+      } else {
+        signUp(login, password, avatar);
+      }
     }
   };
 
@@ -38,14 +45,23 @@ const LoginForm = (): JSX.Element => {
       <div className="flex justify-center mb-4">
         <Logo />
       </div>
-      <input className="mb-4" placeholder="Логин..." />
-      <input className="mb-4" type="password" placeholder="Пароль..." />
+      <input
+        ref={loginRef}
+        placeholder="Логин..."
+        className="mb-4 w-full border border-gray-300 rounded-md py-1 px-2"
+      />
+      <input
+        type="password"
+        ref={passwordRef}
+        placeholder="Пароль..."
+        className="mb-4 w-full border border-gray-300 rounded-md py-1 px-2"
+      />
       {mode === 'signUp' ? (
         <div className="flex items-center space-x-6 mb-4">
           <div className="shrink-0">
             <img
-              src={preview || EMPTY_AVATAR}
               alt="default avatar"
+              src={preview || EMPTY_AVATAR}
               className="h-16 w-16 object-cover rounded-full"
               onClick={() => setAvatar(undefined)}
             />
