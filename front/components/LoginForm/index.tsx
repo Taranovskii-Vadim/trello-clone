@@ -5,6 +5,7 @@ import { useAuth } from '@/store/auth';
 
 import Logo from '@/ui/Logo';
 import Input from '@/ui/Input';
+import { EMPTY_AVATAR } from '../constants';
 
 const LoginForm = (): JSX.Element => {
   const { signIn, signUp } = useAuth();
@@ -44,9 +45,7 @@ const LoginForm = (): JSX.Element => {
         <div className="flex items-center space-x-6 mb-4">
           <div className="shrink-0">
             <img
-              src={
-                preview || 'https://lh3.googleusercontent.com/a-/AFdZucpC_6WFBIfaAbPHBwGM9z8SxyM1oV4wB4Ngwp_UyQ=s96-c'
-              }
+              src={preview || EMPTY_AVATAR}
               alt="default avatar"
               className="h-16 w-16 object-cover rounded-full"
               onClick={() => setAvatar(undefined)}
